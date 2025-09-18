@@ -1,6 +1,5 @@
 import os
 import json
-import glob
 import time 
 import zipfile
 from osgeo import gdal

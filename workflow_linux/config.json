@@ -101,5 +101,7 @@
         "6": 0
     },
     "subsidence_data_2010": "/p/11211992-tki-mangrove-restoration/01_data/subsidence/garcia_et_al___2021___science/GSH/GSH.tif",
-    "subsidence_data_2040": "/p/11211992-tki-mangrove-restoration/01_data/subsidence/garcia_et_al___2021___science/GSH_2040/GSH_2040.tif"
+    "subsidence_data_2040": "/p/11211992-tki-mangrove-restoration/01_data/subsidence/garcia_et_al___2021___science/GSH_2040/GSH_2040.tif",
+    "permanent_water_vrt": "/p/11211992-tki-mangrove-restoration/01_data/gswo/occur.vrt",
+    "permanent_water_threshold": 90
 }

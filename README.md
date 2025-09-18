@@ -1,2 +1,2 @@
-# mangrove_potential_tools
-This repository contains tools to derive the layers of the mangrove potential maps.
+# mrpm_tools
+This respository contains QGIS tools for the processing of the mangrove restoration potential map from Deltares.

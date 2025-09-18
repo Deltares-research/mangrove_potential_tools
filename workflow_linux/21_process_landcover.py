@@ -7,7 +7,6 @@ import geopandas as gpd
 import pystac_client
 import planetary_computer
 import odc.stac
-import rioxarray
 from general_utilities import (
     get_processing_time
 )

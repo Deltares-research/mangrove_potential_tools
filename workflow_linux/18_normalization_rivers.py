@@ -36,8 +36,8 @@ initialize_processing()
 
 # Define tiles and output directory and logfile
 tiles_dir = os.path.join(data_dir, '1_Tiles', country_name)
-coastline_dir = os.path.join(data_dir, "6_Rivers", country_name)
-output_dir = coastline_dir
+rivers_dir = os.path.join(data_dir, "6_Rivers", country_name)
+output_dir = rivers_dir
 time_logfile = data_dir
 
 os.makedirs(output_dir, exist_ok=True)
