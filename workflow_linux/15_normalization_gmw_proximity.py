@@ -51,7 +51,11 @@ for tile_path in glob.glob(os.path.join(tiles_dir, '*_0.geojson')):
     add_raster = os.path.join(gmw_dir, f"ADD_{tile_id}.tif")
     cal_raster = os.path.join(gmw_dir, f"CAL_{tile_id}.tif")
     cli_raster = os.path.join(gmw_dir, f"CLI_{tile_id}.tif")
-    com_raster = os.path.join(gmw_dir, f"SEE_{tile_id}.tif")
+    com_raster = os.path.join(gmw_dir, f"PRM_{tile_id}.tif")
+
+    if os.path.exists(com_raster):
+        print(f"Skipping {tile_id}, {com_raster} already exists.")
+        continue  
 
     # Layer names
     dil_500_name = f"DIL_{tile_id}_500"

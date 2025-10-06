@@ -232,6 +232,7 @@ def add_country_info(gmw_tiles, countries_path, list_countries, output_dir):
 
     # filtered_df_dir = os.path.dirname(output_dir)
     # filtered_df.to_file(os.path.join(filtered_df_dir,"clark_gmw_tiles_country.geojson"), driver="GeoJSON")  
+    gmw_tiles['countries'] = gmw_tiles['countries'].apply(lambda x: ', '.join(x))
 
     gmw_tiles_dir = os.path.dirname(output_dir)
     gmw_tiles.to_file(os.path.join(gmw_tiles_dir,"clark_gmw_tiles_country.geojson"), driver="GeoJSON")  

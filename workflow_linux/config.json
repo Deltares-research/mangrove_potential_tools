@@ -2,6 +2,8 @@
 
     "country_name": "global",
     "tiles_ids": null,
+    "tiles_to_add": ["S01E099", "S02E099", "S03E099", "S01E098", "S02E098"],
+    "tiles_to_skip": ["N13E093"],
     "qgis_env_path": "/u/fuentesm/.conda/envs/qgis_env",
     "target_res_deg": 0.0002222222222219999985,
     "data_dir": "/p/11211992-tki-mangrove-restoration/01_data/0_Workflow",

@@ -53,6 +53,10 @@ for tile_path in glob.glob(os.path.join(tiles_dir, '*_0.geojson')):
     fil_raster = os.path.join(output_dir, f"FIL_{tile_id}.tif")
     com_raster = os.path.join(output_dir, f"PON_{tile_id}.tif")
 
+    if os.path.exists(com_raster):
+        print(f"Skipping {tile_id}, {com_raster} already exists.")
+        continue
+
     # Get bounding box of tile
     projwin = get_projwin(tile_path)
 
@@ -81,7 +85,7 @@ for tile_path in glob.glob(os.path.join(tiles_dir, '*_0.geojson')):
     print(f"✔ Saved: {com_raster}")
 
     # Remove intermediate files
-    remove_temp_files([cla_raster, bin_raster, fil_raster])
+    remove_temp_files([bin_raster, fil_raster])
 
 # Remove .xml files created by qgis when a files is opened
 delete_xml_files(output_dir)

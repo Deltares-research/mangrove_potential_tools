@@ -39,10 +39,10 @@ for tile_path in glob.glob(os.path.join(tiles_dir, '*_0.geojson')):
     print(f"\n>>> Processing tile: {tile_id}")
 
     fil_raster_path = os.path.join(output_dir, f"REP_{tile_id}.tif")
+    com_raster = os.path.join(output_dir, f"PRM_{tile_id}.tif")
 
-    dil_raster_check = os.path.join(output_dir, f"DIL_{tile_id}_{proximity_distances[-1]}.tif")
-    if os.path.exists(dil_raster_check):
-        print(f"Skipping {tile_id}, {dil_raster_check} already exists.")
+    if os.path.exists(com_raster):
+        print(f"Skipping {tile_id}, {com_raster} already exists.")
         continue  
 
     with rasterio.open(fil_raster_path) as src:

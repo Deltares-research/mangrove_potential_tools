@@ -2,7 +2,7 @@ import os
 from collections import defaultdict
 from osgeo import gdal
 
-root = "/p/11211992-tki-mangrove-restoration/01_data/0_Workflow/areas_of_interest"
+root = "/p/11211992-tki-mangrove-restoration/01_data/0_Workflow/16_Mangrove_potential/global"
 
 gdal.UseExceptions()
 groups = defaultdict(list)

@@ -2,6 +2,7 @@ import os
 import json
 import glob
 import time
+import rioxarray
 import pandas as pd
 import geopandas as gpd
 import pystac_client

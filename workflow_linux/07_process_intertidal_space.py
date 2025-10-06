@@ -56,6 +56,11 @@ for tide_path in glob.glob(os.path.join(tides_dir, '*.tif')):
     output_acc_compressed = os.path.join(output_dir, f"MSL_{tide_id}.tif")
     output_hat_compressed = os.path.join(output_dir, f"HAT_{tide_id}.tif")
     output_bey_compressed = os.path.join(output_dir, f"BEY_{tide_id}.tif")
+    acc_path = os.path.join(output_dir, f"ACC_{tide_id}.tif")
+
+    if os.path.exists(acc_path):
+        print(f"Skipping {tide_id}, {acc_path} already exists.")
+        continue
 
     # Load rasters as layers with appropriate names
     tide_raster = tide_path

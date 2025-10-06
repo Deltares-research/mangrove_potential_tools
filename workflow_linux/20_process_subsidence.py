@@ -10,7 +10,7 @@ from qgis_utilities import (
     get_projwin,
     reproject_raster,
     fill_extrapolation,
-    compress_raster
+    fill_and_compress
 )
 from general_utilities import (
     get_processing_time,
@@ -59,10 +59,11 @@ for tile_path in glob.glob(os.path.join(tiles_dir, '*_0.geojson')):
     nor40_raster = os.path.join(output_dir, f"NOR_{tile_id}_2040.tif")
     cal_raster = os.path.join(output_dir, f"CAL_{tile_id}.tif")
     rep_raster = os.path.join(output_dir, f"REP_{tile_id}.tif")
+    nnu_raster = os.path.join(output_dir, f"NNU_{tile_id}.tif")
     com_raster = os.path.join(output_dir, f"SUB_{tile_id}.tif")
 
-    fill_extrapolation(sub10_raster, fil10_raster, 50)
-    fill_extrapolation(sub40_raster, fil40_raster, 50)
+    fill_extrapolation(sub10_raster, fil10_raster, 20)
+    fill_extrapolation(sub40_raster, fil40_raster, 20)
 
     fil10_name = f"FIL_{tile_id}_2010"
     fil40_name = f"FIL_{tile_id}_2040"
@@ -120,12 +121,12 @@ for tile_path in glob.glob(os.path.join(tiles_dir, '*_0.geojson')):
     reproject_raster(cal_raster, rep_raster, target_res_deg, projwin)
 
     # Compress raster
-    compress_raster(rep_raster, com_raster)
+    fill_and_compress(rep_raster, nnu_raster, com_raster, '')
 
     print(f"✔ Saved: {com_raster}")
 
     # Remove intermediate files
-    remove_temp_files([sub10_raster, sub40_raster, fil10_raster, fil40_raster, nor10_raster, nor40_raster, cal_raster, rep_raster])
+    remove_temp_files([sub10_raster, sub40_raster, nor10_raster, nor40_raster, cal_raster, rep_raster, nnu_raster])
 
 # Remove .xml files created by qgis when a files is opened
 delete_xml_files(output_dir)

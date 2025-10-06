@@ -50,6 +50,11 @@ for tile_path in glob.glob(os.path.join(tiles_dir, '*_10000.geojson')):
     cli_raster = os.path.join(output_dir, f"CLI_{tile_id}.tif")
     fil_raster = os.path.join(output_dir, f"FIL_{tile_id}.tif")
     rep_raster = os.path.join(output_dir, f"REP_{tile_id}.tif")
+    com_raster = os.path.join(output_dir, f"PRM_{tile_id}.tif")
+
+    if os.path.exists(com_raster):
+        print(f"Skipping {tile_id}, {com_raster} already exists.")
+        continue
 
     # Get bounding box of tile
     projwin = get_projwin(tile_path, rounding=False)

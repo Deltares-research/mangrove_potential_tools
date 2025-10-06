@@ -1,12 +1,12 @@
 #!/bin/bash
 
 #SBATCH --job-name=tiles_processing # A short name for your job 
-#SBATCH --partition=4vcpu # Which partition/queue to use 
+#SBATCH --partition=16vcpu # Which partition/queue to use 
 #SBATCH --time=03-05:29:00 # Max runtime (D-HH:MM:SS) 
 #SBATCH --nodes=1 # Number of nodes (computers) 
 #SBATCH --ntasks=1 # Number of tasks (MPI processes) 
 #SBATCH --cpus-per-task=4 # Number of CPU cores per task 
-#SBATCH --output=output_mrpm_processing.out
+#SBATCH --output=final_check.out
 
 ## Load the required software
 module load miniforge
@@ -53,6 +53,6 @@ conda init
 
 ## QGIS environment
 ## srun conda run -n qgis_env python 22_process_permanent_water.py
-srun conda run -n qgis_env python 23_process_no_valid_areas.py
-srun conda run -n qgis_env python 24_process_empty_areas.py
+## srun conda run -n qgis_env python 23_process_empty_areas.py
+srun conda run -n qgis_env python 24_process_no_valid_areas.py
 srun conda run -n qgis_env python 25_process_mangrove_potential_areas.py

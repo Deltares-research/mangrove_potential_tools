@@ -241,8 +241,8 @@ def process_tiles_overlay(tiles_dir, input_path, buffers):
 def clip_subsidence(tiles_dir, raster_file, output_dir, id):
 
     log = []
-    for tile_path in glob.glob(os.path.join(tiles_dir, '*_0.geojson')):
-        tile_id = os.path.basename(tile_path).replace("TIL_", "").replace("_0.geojson", "")
+    for tile_path in glob.glob(os.path.join(tiles_dir, '*_200000.geojson')):
+        tile_id = os.path.basename(tile_path).replace("TIL_", "").replace("_200000.geojson", "")
         print(f"\n>>> Processing tile: {tile_id}")
 
         sub_file = os.path.join(output_dir, f"CLI_{tile_id}_{id}.tif")
@@ -255,6 +255,14 @@ def clip_subsidence(tiles_dir, raster_file, output_dir, id):
             with rasterio.open(raster_file) as src:
                 out_image, out_transform = rasterio.mask.mask(src, [tile.geometry.iloc[0]], crop=True)
                 out_meta = src.meta.copy()
+
+                # Check if the masked image is empty
+                if out_image is None or out_image.size == 0:
+                    raise ValueError(f"Error: The masked raster for {raster_file} is empty!")
+
+                if np.all(out_image == src.nodata):
+                    raise ValueError(f"Error: The masked raster for {raster_file} contains no valid pixels!")
+
 
             out_meta.update({
                 "driver": "GTiff",

@@ -71,6 +71,10 @@ for tile_path in glob.glob(os.path.join(tiles_dir, '*_0.geojson')):
     nor_raster = os.path.join(output_dir, f"NOC_{tile_id}.tif")
     com_raster = os.path.join(output_dir, f"PRC_{tile_id}.tif")
 
+    if os.path.exists(com_raster):
+        print(f"Skipping {tile_id}, {com_raster} already exists.")
+        continue  
+
     # Map in order from largest to smallest
     coa_files = [
         (coa_7500, coa_7500_r, coa_7500_f, f"COA_{tile_id}_7500_f"),

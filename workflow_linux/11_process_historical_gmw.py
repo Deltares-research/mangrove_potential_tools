@@ -43,7 +43,7 @@ for tile_path in glob.glob(os.path.join(tiles_dir, '*_0.geojson')):
     tile_id = os.path.basename(tile_path).replace("TIL_", "").replace("_0.geojson", "")
     print(f"\n>>> Processing tile: {tile_id}")
 
-    exp_raster = os.path.join(gmw_dir, f"EXP_{tile_id}.tif")
+    exp_raster = os.path.join(gmw_dir, f"EXH_{tile_id}.tif")
     cal_raster = os.path.join(gmw_dir, f"CAL_{tile_id}.tif")
     nor_raster = os.path.join(gmw_dir, f"HIS_{tile_id}.tif")
 
@@ -87,7 +87,7 @@ for tile_path in glob.glob(os.path.join(tiles_dir, '*_0.geojson')):
     raster_calculator(final_expr, layers_to_use, exp_raster)
 
     # Normalizing layer
-    exp_name = f"EXP_{tile_id}"
+    exp_name = f"EXH_{tile_id}"
     # expression = (
     #     f'(("{exp_name}@1" = 1996) * 0 + '
     #     f'("{exp_name}@1" = 2007) * 36 + '
@@ -121,7 +121,7 @@ for tile_path in glob.glob(os.path.join(tiles_dir, '*_0.geojson')):
 
     # remove_temp_files([exp_raster, cal_raster] + rasters_to_remove)
 
-    remove_temp_files([exp_raster, cal_raster])
+    remove_temp_files([cal_raster])
 
 # Remove .xml files created by qgis when a files is opened
 delete_xml_files(gmw_dir)

@@ -50,6 +50,10 @@ for tile_path in glob.glob(os.path.join(tiles_dir, '*_0.geojson')):
     cal_path = os.path.join(acc_dir, f"CAL_{tile_id}.tif")
     acc_path = os.path.join(acc_dir, f"ACC_{tile_id}.tif")
 
+    if os.path.exists(acc_path):
+        print(f"Skipping {tile_id}, {acc_path} already exists.")
+        continue
+
     # Layer names
     bey_name = f"BEY_{tile_id}"
     hat_name = f"HAT_{tile_id}"

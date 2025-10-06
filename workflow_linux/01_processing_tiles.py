@@ -19,6 +19,8 @@ with open("config.json", "r") as f:
 country_name = config["country_name"]
 data_dir = config["data_dir"]
 tiles_ids = config["tiles_ids"] # Test tiles: ["S01E117", "S02E117"] 
+tiles_to_add = config["tiles_to_add"]
+tiles_to_skip = config["tiles_to_skip"]
 global_tiles = config["global_tiles"]
 clark_tiles = config["clark_tiles"]
 clark_countries = config["clark_countries"] 
@@ -37,6 +39,13 @@ time_logfile = data_dir
 start_time = time.time()
 
 normalized_ids = get_clark_tiles_ids(clark_tiles)
+print(normalized_ids)
+# Remove no valid tiles
+for i in tiles_to_skip:
+    normalized_ids.remove(i)
+# Add missing tiles
+normalized_ids.extend(tiles_to_add)
+
 clark_tiles = get_clark_geometries(global_tiles, normalized_ids, output_dir)
 
 if tiles_ids is not None:

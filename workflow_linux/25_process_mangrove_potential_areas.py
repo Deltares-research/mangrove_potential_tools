@@ -54,7 +54,7 @@ for tile_path in glob.glob(os.path.join(tiles_dir, '*_0.geojson')):
     print(f"\n>>> Processing tile: {tile_id}")
 
     historical_raster = os.path.join(gmw_dir, f"HIS_{tile_id}.tif")
-    seed_raster = os.path.join(gmw_dir, f"SEE_{tile_id}.tif")
+    seed_raster = os.path.join(gmw_dir, f"PRM_{tile_id}.tif")
     pond_raster = os.path.join(pond_dir, f"PON_{tile_id}.tif")
     rivers_raster = os.path.join(rivers_dir, f"PRR_{tile_id}.tif")
     acc_raster = os.path.join(acc_dir, f"ACC_{tile_id}.tif")
@@ -67,6 +67,10 @@ for tile_path in glob.glob(os.path.join(tiles_dir, '*_0.geojson')):
     bin_raster = os.path.join(output_dir, f"BIN_{tile_id}.tif")
     fil_raster = os.path.join(output_dir, f"FIL_{tile_id}.tif")
     com_raster = os.path.join(output_dir, f"MPM_{tile_id}.tif")
+
+    if os.path.exists(com_raster):
+        print(f"Skipping {tile_id}, {com_raster} already exists.")
+        continue  
 
     # Check if all input rasters exist
     input_rasters  = [mask_raster, pond_raster, acc_raster, historical_raster, seed_raster,
@@ -97,7 +101,7 @@ for tile_path in glob.glob(os.path.join(tiles_dir, '*_0.geojson')):
         f'("PON_{tile_id}@1" + '
         f'"ACC_{tile_id}@1" + '
         f'"HIS_{tile_id}@1" + '
-        f'"SEE_{tile_id}@1" + '
+        f'"PRM_{tile_id}@1" + '
         f'max("PRR_{tile_id}@1", "PRC_{tile_id}@1") + '
         f'"SUB_{tile_id}@1") / 6, '
         f'0)'
