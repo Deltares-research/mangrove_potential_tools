@@ -2,4 +2,4 @@ mamba create -n qgis_solved -c conda-forge qgis shapely geopandas rasterio numpy
 
 mamba create -n mrpm_qgis -c conda-forge qgis shapely geopandas -y
 
-mamba create -n mrpm_rasterio -c conda-forge shapely geopandas rasterio numpy scipy pystac-client planetary-computer odc-stac rioxarray -y
+mamba create -n mrpm_env -c conda-forge shapely geopandas rasterio numpy scipy pystac-client planetary-computer odc-stac rioxarray -y

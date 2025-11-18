@@ -35,19 +35,13 @@ conda create --name qgis_env --clone mrpm_qgis
 conda env remove --name mrpm_qgis
 ```
 
-### 2. Rasterio Environment (`mrpm_rasterio.yml`)
+### 2. Rasterio Environment (`mrpm_env.yml`)
 
 This environment contains rasterio and other raster processing libraries. Install it using:
 
 ```bash
-conda env create -f environment/mrpm_rasterio.yml
-conda activate mrpm_rasterio
-```
-
-**Note:** The environment name in the yml file is `mrpm_rasterio`, but the scripts reference it as `mrpm_env`. You may need to rename the environment after creation:
-```bash
-conda create --name mrpm_env --clone mrpm_rasterio
-conda env remove --name mrpm_rasterio
+conda env create -f environment/mrpm_env.yml
+conda activate mrpm_env
 ```
 
 ## Running the Workflow
