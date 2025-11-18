@@ -65,7 +65,7 @@ subfolders = [
     "SUB",
 ]
 
-# process_cogs(data_dir, analysis_id, workflow_steps, subfolders, subscores_dir)
+process_cogs(data_dir, analysis_id, workflow_steps, subfolders, subscores_dir)
 
 # Define workflow steps (just the folder names)
 workflow_steps = [
@@ -79,7 +79,7 @@ subfolders = [
     "MPM",
 ]
 
-# process_cogs(data_dir, analysis_id, workflow_steps, subfolders, mangrove_potential_score_dir)
+process_cogs(data_dir, analysis_id, workflow_steps, subfolders, mangrove_potential_score_dir)
 
 end_time = time.time()
 

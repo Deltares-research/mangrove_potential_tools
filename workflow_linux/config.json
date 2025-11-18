@@ -1,6 +1,6 @@
 {
 
-    "analysis_id": "global",
+    "analysis_id": "S01E117",
     "data_dir": "/p/11211992-tki-mangrove-restoration/01_data/0_Workflow",
     "time_logfile": "/p/11211992-tki-mangrove-restoration/01_data/0_Workflow",
     "clark_files": "/p/11211992-tki-mangrove-restoration/01_data/2_Raw_data/clark",
@@ -20,7 +20,7 @@
     "subsidence_data_2040": "/p/11211992-tki-mangrove-restoration/01_data/2_Raw_data/subsidence/garcia_et_al___2021___science/GSH_2040/GSH_2040.tif",
     "permanent_water_vrt": "/p/11211992-tki-mangrove-restoration/01_data/2_Raw_data/gswo/occur.vrt",
     "geoserver_folder": "/p/11211992-tki-mangrove-restoration/01_data/1_Geoserver",
-    "tiles_ids": null,
+    "tiles_ids": ["S01E117"],
     "tiles_to_add": ["S01E099", "S02E099", "S03E099", "S01E098", "S02E098"],
     "tiles_to_skip": ["N13E093"],
     "qgis_env_path": "/u/fuentesm/.conda/envs/qgis_env",

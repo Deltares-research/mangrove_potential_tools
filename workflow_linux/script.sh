@@ -5,7 +5,7 @@
 #SBATCH --nodes=1                          # Number of nodes
 #SBATCH --ntasks=1                         # Number of tasks (MPI processes)
 #SBATCH --cpus-per-task=4                  # Number of CPU cores per task
-#SBATCH --output=800.out           # Standard output log file
+#SBATCH --output=script.out           # Standard output log file
 
 ## ===============================================
 ## READ CONFIG FILE

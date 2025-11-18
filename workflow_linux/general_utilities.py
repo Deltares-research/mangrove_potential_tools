@@ -87,8 +87,9 @@ def get_clark_tiles_ids(clark_dir, tiles_to_add, tiles_to_skip):
     normalized_ids = [normalize_id_name(t) for t in raw_ids]
     print(len(normalized_ids), "tiles found in Clark directory")
     # Remove no valid tiles
-    for i in tiles_to_skip:
-        normalized_ids.remove(i)
+    if tiles_to_skip is not None:
+        for i in tiles_to_skip:
+            normalized_ids.remove(i)
     # Add missing tiles
     normalized_ids.extend(tiles_to_add)
     print(len(normalized_ids), "tiles selected after adding and removing tiles")

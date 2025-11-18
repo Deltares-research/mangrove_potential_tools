@@ -33,90 +33,90 @@ fi
 # python 01_create_gmw_vrt.py "$CONFIG_FILE"
 
 # # Create tiles to process data
-# python 02_processing_tiles_noponds.py "$CONFIG_FILE"
+python 02_processing_tiles.py "$CONFIG_FILE"
 
-# # Process pond areas
-# python 03_process_clark.py "$CONFIG_FILE"
+# Process pond areas
+python 03_process_clark.py "$CONFIG_FILE"
 
-# # Process accommodation space
-# python 04_process_gtsm.py "$CONFIG_FILE"
-# python 04_process_elevation.py "$CONFIG_FILE"
-# python 04_process_intertidal_space.py "$CONFIG_FILE"
-# python 04_process_accommodation_space.py "$CONFIG_FILE"
+# Process accommodation space
+python 04_process_gtsm.py "$CONFIG_FILE"
+python 04_process_elevation.py "$CONFIG_FILE"
+python 04_process_intertidal_space.py "$CONFIG_FILE"
+python 04_process_accommodation_space.py "$CONFIG_FILE"
 
-# # Process historical and recruitment gmw
-# python 05_process_gmw.py "$CONFIG_FILE"
-# python 05_process_historical_gmw.py "$CONFIG_FILE"
-# python 05_process_recruitment_gmw.py "$CONFIG_FILE"
+# Process historical and recruitment gmw
+python 05_process_gmw.py "$CONFIG_FILE"
+python 05_process_historical_gmw.py "$CONFIG_FILE"
+python 05_process_recruitment_gmw.py "$CONFIG_FILE"
 
-# # Process seed availability
-# python 06_decrease_gmw_resolution.py "$CONFIG_FILE"
+# Process seed availability
+python 06_decrease_gmw_resolution.py "$CONFIG_FILE"
 
-# # Activate Rasterio environment
-# conda deactivate
-# conda activate mrpm_env
+# Activate Rasterio environment
+conda deactivate
+conda activate mrpm_env
 
-# python 06_process_gmw_proximity.py "$CONFIG_FILE"
+python 06_process_gmw_proximity.py "$CONFIG_FILE"
 
-# # Activate QGIS environment
-# conda deactivate
-# conda activate qgis_env
+# Activate QGIS environment
+conda deactivate
+conda activate qgis_env
 
-# python 06_normalization_gmw_proximity.py "$CONFIG_FILE"
+python 06_normalization_gmw_proximity.py "$CONFIG_FILE"
 
-# # Process coastline and rivers proximities
-# # Activate Rasterio environment
-# conda deactivate
-# conda activate mrpm_env
+# Process coastline and rivers proximities
+# Activate Rasterio environment
+conda deactivate
+conda activate mrpm_env
 
-# python 07_process_coastline_rivers_distance.py "$CONFIG_FILE"
+python 07_process_coastline_rivers_distance.py "$CONFIG_FILE"
 
-# # Activate QGIS environment
-# conda deactivate
-# conda activate qgis_env
+# Activate QGIS environment
+conda deactivate
+conda activate qgis_env
 
-# python 07_normalization_coastline.py "$CONFIG_FILE"
-# python 07_normalization_rivers.py "$CONFIG_FILE"
+python 07_normalization_coastline.py "$CONFIG_FILE"
+python 07_normalization_rivers.py "$CONFIG_FILE"
 
-# # Process subsidence
-# # Activate Rasterio environment
-# conda deactivate
-# conda activate mrpm_env
+# Process subsidence
+# Activate Rasterio environment
+conda deactivate
+conda activate mrpm_env
 
-# python 08_clip_subsidence.py "$CONFIG_FILE"
+python 08_clip_subsidence.py "$CONFIG_FILE"
 
-# # Activate QGIS environment
-# conda deactivate
-# conda activate qgis_env
+# Activate QGIS environment
+conda deactivate
+conda activate qgis_env
 
-# python 08_process_subsidence.py "$CONFIG_FILE"
+python 08_process_subsidence.py "$CONFIG_FILE"
 
-# # Process landcover
-# # Activate Rasterio environment
-# conda deactivate
-# conda activate mrpm_env
+# Process landcover
+# Activate Rasterio environment
+conda deactivate
+conda activate mrpm_env
 
-# python 09_process_landcover.py "$CONFIG_FILE"
+python 09_process_landcover.py "$CONFIG_FILE"
 
-# # Process permanent water
-# # Activate QGIS environment
-# conda deactivate
-# conda activate qgis_env
+# Process permanent water
+# Activate QGIS environment
+conda deactivate
+conda activate qgis_env
 
-# python 10_process_permanent_water.py "$CONFIG_FILE"
+python 10_process_permanent_water.py "$CONFIG_FILE"
 
-# # Process empty areas and no valid areas
-# python 11_process_empty_areas.py "$CONFIG_FILE"
-# python 11_process_no_valid_areas.py "$CONFIG_FILE"
+# Process empty areas and no valid areas
+python 11_process_empty_areas.py "$CONFIG_FILE"
+python 11_process_no_valid_areas.py "$CONFIG_FILE"
 
-# # Process mangrove potential areas
-# python 12_process_mangrove_potential_areas.py "$CONFIG_FILE"
+# Process mangrove potential areas
+python 12_process_mangrove_potential_areas.py "$CONFIG_FILE"
 
-# # Post-processing
-# # Activate Rasterio environment
-# conda deactivate
-# conda activate mrpm_env
+# Post-processing
+# Activate Rasterio environment
+conda deactivate
+conda activate mrpm_env
 
-# python 13_calculate_statistics.py "$CONFIG_FILE"
-# python 14_create_visualization.py "$CONFIG_FILE"
-# python 15_process_cog_files.py "$CONFIG_FILE"
+python 13_calculate_statistics.py "$CONFIG_FILE"
+python 14_create_visualization.py "$CONFIG_FILE"
+python 15_process_cog_files.py "$CONFIG_FILE"
