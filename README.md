@@ -20,19 +20,13 @@ The tools in this repository are designed to:
 
 This workflow requires two conda environments to be installed. The environments are defined in the `environment/` directory:
 
-### 1. QGIS Environment (`mrpm_qgis.yml`)
+### 1. QGIS Environment (`qgis_env.yml`)
 
 This environment contains QGIS and related geospatial processing libraries. Install it using:
 
 ```bash
-conda env create -f environment/mrpm_qgis.yml
-conda activate mrpm_qgis
-```
-
-**Note:** The environment name in the yml file is `mrpm_qgis`, but the scripts reference it as `qgis_env`. You may need to rename the environment after creation:
-```bash
-conda create --name qgis_env --clone mrpm_qgis
-conda env remove --name mrpm_qgis
+conda env create -f environment/qgis_env.yml
+conda activate qgis_env
 ```
 
 ### 2. Rasterio Environment (`mrpm_env.yml`)
