@@ -1,4 +1,4 @@
-# Mangrove Potential Map (MRPM) Tools
+# Mangrove Potential Map (MPM) Tools
 
 This repository contains QGIS tools for processing the mangrove potential map from Deltares. The workflow processes various geospatial datasets to create mangrove potential maps and underlying layers that assess the suitability of areas for mangrove restoration.
 
