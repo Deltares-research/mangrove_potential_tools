@@ -9,6 +9,7 @@ from shapely.geometry import mapping
 import rasterio
 import numpy as np
 from scipy.ndimage import binary_dilation
+from rasterio.shutil import copy as rio_copy
 
 def apply_dilation(raster_data, output_path, distance_m, meters_per_pixel, profile):
     radius_px = distance_m / meters_per_pixel
@@ -25,6 +26,7 @@ def buffer_features(features_gdf, buffer_m):
     features_proj = features_gdf.to_crs(epsg=3857)
     features_proj['geometry'] = features_proj.geometry.buffer(buffer_m)
     features_gdf_buffered = features_proj.to_crs(features_gdf.crs)
+    
     return features_gdf_buffered
 
 def clip_river_to_single_tile(features_path, tile_path, output_dir, prefix, buffer_m, tile_id, tile_log):
@@ -44,7 +46,7 @@ def clip_river_to_single_tile(features_path, tile_path, output_dir, prefix, buff
         if clipped.crs.is_geographic:
             clipped = clipped.to_crs(epsg=3857)
         clipped["geometry"] = clipped.apply(
-            lambda row: row.geometry.buffer(row["width_m"]), axis=1
+            lambda row: row.geometry.buffer(row["width_m"]/2), axis=1
         )
         clipped= clipped.to_crs(tile_gdf.crs)
         clipped = clipped.dissolve() 
@@ -93,9 +95,25 @@ def rasterize_tiles(buffer, prefix, tiles_dir, raster_dir, vector_dir, output_di
         print(f"\n>>> Processing tile: {tile_id}")
 
         # Build file paths
-        raster_file = os.path.join(raster_dir, f"GTS_{tile_id}.tif")
+        raster_file = os.path.join(raster_dir, f"GMW_{tile_id}_2020.tif")
         vector_file = os.path.join(vector_dir, f"{prefix}_{tile_id}_{str(buffer)}.geojson")
         output_file = os.path.join(output_dir, f"{prefix}_{tile_id}_{str(buffer)}.tif")
+
+        if prefix =="RIV":
+            com_raster = os.path.join(output_dir, f"PRR_{tile_id}.tif")
+            if os.path.exists(com_raster):
+                print(f"Skipping {tile_id}, {com_raster} already exists.")
+                continue  
+        if prefix =="OVE":
+            com_raster = os.path.join(output_dir, f"PRR_{tile_id}.tif")
+            if os.path.exists(com_raster):
+                print(f"Skipping {tile_id}, {com_raster} already exists.")
+                continue 
+        elif prefix =="COA":
+            com_raster = os.path.join(output_dir, f"PRC_{tile_id}.tif")
+            if os.path.exists(com_raster):
+                print(f"Skipping {tile_id}, {com_raster} already exists.")
+                continue  
 
         raster_exists = os.path.exists(raster_file)
         vector_exists = os.path.exists(vector_file)
@@ -153,29 +171,32 @@ def rasterize_tiles(buffer, prefix, tiles_dir, raster_dir, vector_dir, output_di
             "masked_created": masked_created
         })
 
-    # # Save log CSV
-    # log_df = pd.DataFrame(log)
-    # log_file = os.path.join(output_dir, f"RAS_{prefix}_{str(buffer)}.csv")
-    # log_df.to_csv(log_file, index=False)
-    # print(f"Processing finished. Log saved to {log_file}")
-
 def process_tiles_clips(tiles_dir, features, buffer, prefix, output_dir):
     log = []
     for tile_path in glob.glob(os.path.join(tiles_dir, '*_0.geojson')):
         tile_id = os.path.basename(tile_path).replace("TIL_", "").replace("_0.geojson", "")
         print(f"\n>>> Processing tile: {tile_id}")
         if prefix =="RIV":
+            com_raster = os.path.join(output_dir, f"PRR_{tile_id}.tif")
+            if os.path.exists(com_raster):
+                print(f"Skipping {tile_id}, {com_raster} already exists.")
+                continue  
             log = clip_river_to_single_tile(features, tile_path, output_dir, prefix, buffer, tile_id, log)
         elif prefix =="COA":
+            com_raster = os.path.join(output_dir, f"PRC_{tile_id}.tif")
+            if os.path.exists(com_raster):
+                print(f"Skipping {tile_id}, {com_raster} already exists.")
+                continue  
+            log = clip_coastline_to_single_tile(features, tile_path, output_dir, prefix, buffer, tile_id, log)
+        elif prefix =="COR":
+            com_raster = os.path.join(output_dir, f"PRR_{tile_id}.tif")
+            if os.path.exists(com_raster):
+                print(f"Skipping {tile_id}, {com_raster} already exists.")
+                continue  
             log = clip_coastline_to_single_tile(features, tile_path, output_dir, prefix, buffer, tile_id, log)
         else:
             print(f"Unknown prefix {prefix}, skipping tile {tile_id}")
             continue
-    # Save log  
-    # log_df = pd.DataFrame(log)
-    # log_csv_path = os.path.join(output_dir, f"{prefix}_{str(buffer)}.csv")
-    # log_df.to_csv(log_csv_path, index=False)
-    # print(f"Processing finished. Log saved to {log_csv_path}")
 
 def process_tiles_overlay(tiles_dir, input_path, buffers):
     for buffer in buffers:
@@ -185,9 +206,14 @@ def process_tiles_overlay(tiles_dir, input_path, buffers):
             print(f"\n>>> Processing tile: {tile_id}")
 
             # File paths
-            c300_file = os.path.join(input_path, f'COA_{tile_id}_30000.geojson')
+            c300_file = os.path.join(input_path, f'COR_{tile_id}_30000.geojson')
             riv_file = os.path.join(input_path, f'RIV_{tile_id}_{buffer}.geojson')
             ove_file = os.path.join(input_path, f'OVE_{tile_id}_{buffer}.geojson')
+
+            com_raster = os.path.join(input_path, f"PRR_{tile_id}.tif")
+            if os.path.exists(com_raster):
+                print(f"Skipping {tile_id}, {com_raster} already exists.")
+                continue  
 
             # Check existence
             C300_exists = os.path.exists(c300_file)
@@ -232,20 +258,18 @@ def process_tiles_overlay(tiles_dir, input_path, buffers):
 
             log.append({"tile_id": tile_id, "C300_exists": C300_exists, "RIV_exists": riv_exists, "OVE_created": ove_created})
 
-        # # Save log
-        # log_df = pd.DataFrame(log)
-        # log_file = os.path.join(input_path, f'OVE_{str(buffer)}.csv')
-        # log_df.to_csv(log_file, index=False)
-        # print(f"Processing finished. Log saved to {log_file}")
-
 def clip_subsidence(tiles_dir, raster_file, output_dir, id):
 
     log = []
-    for tile_path in glob.glob(os.path.join(tiles_dir, '*_200000.geojson')):
+    for tile_path in glob.glob(os.path.join(tiles_dir, '*200000.geojson')):
         tile_id = os.path.basename(tile_path).replace("TIL_", "").replace("_200000.geojson", "")
         print(f"\n>>> Processing tile: {tile_id}")
 
         sub_file = os.path.join(output_dir, f"CLI_{tile_id}_{id}.tif")
+
+        if os.path.exists(sub_file):
+            print(f"Skipping {tile_id}, {sub_file} already exists.")
+            continue
 
         masked_created = False  # default in case it fails
 
@@ -293,3 +317,105 @@ def clip_subsidence(tiles_dir, raster_file, output_dir, id):
     print(f"Processing finished. Log saved to {log_file}")
 
     return log_df
+
+def process_folder(input_folder, output_base, subfolder):
+    # Remove all .xml files
+    for xml_file in glob.glob(os.path.join(input_folder, "*.xml")):
+        os.remove(xml_file)
+        print(f"Removed: {xml_file}")
+
+    # Prepare output folder
+    output_folder = os.path.join(output_base, subfolder)
+    os.makedirs(output_folder, exist_ok=True)
+
+    # Convert all .tif files to COG
+    for tif_file in glob.glob(os.path.join(input_folder, f"{subfolder}*.tif")):
+        output_file = os.path.join(output_folder, os.path.basename(tif_file))
+
+        with rasterio.open(tif_file) as src:
+            rio_copy(src, output_file, driver="COG", compress="LZW", overview_resampling="nearest")
+        print(f"COG saved: {output_file}")
+
+def process_folder_subsidence(input_folder, output_base, subfolder, year):
+    # Remove all .xml files
+    for xml_file in glob.glob(os.path.join(input_folder, "*.xml")):
+        os.remove(xml_file)
+        print(f"Removed: {xml_file}")
+
+    # Prepare output folder
+    output_folder = os.path.join(output_base, "SUB", year)
+    os.makedirs(output_folder, exist_ok=True)
+
+    # Convert all .tif files to COG
+    for tif_file in glob.glob(os.path.join(input_folder, f"{subfolder}*{year}.tif")):
+        output_file = os.path.join(output_folder, os.path.basename(tif_file))
+
+        with rasterio.open(tif_file) as src:
+            rio_copy(src, output_file, driver="COG", compress="LZW", overview_resampling="nearest")
+        print(f"COG saved: {output_file}")
+
+def process_folder_gmw(input_folder, output_base, subfolder, year):
+    # Remove all .xml files
+    for xml_file in glob.glob(os.path.join(input_folder, "*.xml")):
+        os.remove(xml_file)
+        print(f"Removed: {xml_file}")
+
+    # Prepare output folder
+    output_folder = os.path.join(output_base, "GMW", year)
+    os.makedirs(output_folder, exist_ok=True)
+
+    # Convert all .tif files to COG
+    for tif_file in glob.glob(os.path.join(input_folder, f"{subfolder}*{year}.tif")):
+        output_file = os.path.join(output_folder, os.path.basename(tif_file))
+
+        # If output_file already exists, skip processing
+        if os.path.exists(output_file):
+            print(f"Skipping (already exists): {output_file}")
+            continue
+
+        with rasterio.open(tif_file) as src:
+            rio_copy(src, output_file, driver="COG", compress="LZW", overview_resampling="nearest")
+        print(f"COG saved: {output_file}")
+
+def process_folder_tiles(input_folder, output_base, subfolder, tiles):
+    # Remove all .xml files
+    for xml_file in glob.glob(os.path.join(input_folder, "*.xml")):
+        os.remove(xml_file)
+        print(f"Removed: {xml_file}")
+
+    # Prepare output folder
+    output_folder = os.path.join(output_base, subfolder)
+    os.makedirs(output_folder, exist_ok=True)
+
+    # Convert all .tif files to COG
+    for tif_file in glob.glob(os.path.join(input_folder, f"{subfolder}*.tif")):
+
+        # if tile_file has ["S01E099", "S02E099", "S03E099", "S01E098", "S02E098"] in its name, process the rest if not raise a message saying it was already processed
+        if not any(tile in os.path.basename(tif_file) for tile in tiles):
+            print(f"Skipping: {tif_file}")
+            continue
+
+        output_file = os.path.join(output_folder, os.path.basename(tif_file))
+
+        with rasterio.open(tif_file) as src:
+            rio_copy(src, output_file, driver="COG", compress="LZW", overview_resampling="nearest")
+        print(f"COG saved: {output_file}")
+
+def process_cogs(data_dir, analysis_id, workflow_steps, subfolders, output_dir):
+
+    # Build input folder paths dynamically
+    input_folders = [os.path.join(data_dir, step, analysis_id) for step in workflow_steps]
+
+    # Example: print to check
+    for folder in input_folders:
+        print(folder)
+
+    for input_folder, subfolder in zip(input_folders, subfolders):
+        if subfolder in ["FIL"]:
+            process_folder_subsidence(input_folder, output_dir, subfolder, "2010")
+            process_folder_subsidence(input_folder, output_dir, subfolder, "2040")
+        elif subfolder in ["GMW"]:
+            for i in [1996, 2020]:
+                process_folder_gmw(input_folder, output_dir, subfolder, str(i))
+        else:
+            process_folder(input_folder, output_dir, subfolder)

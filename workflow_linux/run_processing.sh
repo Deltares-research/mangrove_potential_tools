@@ -6,90 +6,117 @@ set -e
 # Load conda into the shell
 source /opt/miniforge3/etc/profile.d/conda.sh
 
-# Activate your QGIS environment
-conda activate qgis_env
-
 # Navigate to your project directory
 cd /p/11211992-tki-mangrove-restoration/02_scripts_and_processing/mrpm_tools/workflow_linux
 
-# Run the Python script
-# python 01_processing_tiles.py
-# python 02_create_clark_vrt.py
-# python 03_process_clark.py
-# python 04_process_gtsm.py
-# python 05_create_deltadtm_vrt.py
-# python 06_process_elevation.py
-# python 07_process_intertidal_space.py
-# python 08_process_accommodation_space.py
-# python 09_create_gmw_vrt.py
-# python 10_fill_gmw_nodata.py
-# python 11_process_historical_gmw.py
-# python 12_process_recruitment_gmw.py
-# python 13_decrease_gmw_resolution.py
+# Activate QGIS environment
+conda activate qgis_env
 
-# # Switch to Rasterio environment
+# Read config file from command line argument
+if [ $# -lt 1 ]; then
+    echo "❌ Error: No config file provided."
+    echo "Usage: $0 <config_file.json>"
+    exit 1
+fi
+
+CONFIG_FILE="$1"
+
+# Check if file exists
+if [ ! -f "$CONFIG_FILE" ]; then
+    echo "❌ Error: Config file '$CONFIG_FILE' not found."
+    exit 1
+fi
+
+# # Create vrt files
+# python 01_create_clark_vrt.py "$CONFIG_FILE"
+# python 01_create_deltadtm_vrt.py "$CONFIG_FILE"
+# python 01_create_gmw_vrt.py "$CONFIG_FILE"
+
+# # Create tiles to process data
+# python 02_processing_tiles_noponds.py "$CONFIG_FILE"
+
+# # Process pond areas
+# python 03_process_clark.py "$CONFIG_FILE"
+
+# # Process accommodation space
+# python 04_process_gtsm.py "$CONFIG_FILE"
+# python 04_process_elevation.py "$CONFIG_FILE"
+# python 04_process_intertidal_space.py "$CONFIG_FILE"
+# python 04_process_accommodation_space.py "$CONFIG_FILE"
+
+# # Process historical and recruitment gmw
+# python 05_process_gmw.py "$CONFIG_FILE"
+# python 05_process_historical_gmw.py "$CONFIG_FILE"
+# python 05_process_recruitment_gmw.py "$CONFIG_FILE"
+
+# # Process seed availability
+# python 06_decrease_gmw_resolution.py "$CONFIG_FILE"
+
+# # Activate Rasterio environment
 # conda deactivate
 # conda activate mrpm_env
 
-# # Run the Python script
-# python 14_process_gmw_proximity.py
+# python 06_process_gmw_proximity.py "$CONFIG_FILE"
 
-# # Switch back to QGIS environment
+# # Activate QGIS environment
 # conda deactivate
 # conda activate qgis_env
 
-# # Run the Python scripts
-# python 15_normalization_gmw_proximity.py
+# python 06_normalization_gmw_proximity.py "$CONFIG_FILE"
 
-# # Switch back to Rasterio environment
+# # Process coastline and rivers proximities
+# # Activate Rasterio environment
 # conda deactivate
 # conda activate mrpm_env
 
-# # Run the final Python script
-# python 16_process_coastline_rivers_distance.py
+# python 07_process_coastline_rivers_distance.py "$CONFIG_FILE"
 
-# # Switch back to QGIS environment
+# # Activate QGIS environment
 # conda deactivate
 # conda activate qgis_env
 
-# # Run the Python script
-# python 17_normalization_coastline.py
-# python 18_normalization_rivers.py
+# python 07_normalization_coastline.py "$CONFIG_FILE"
+# python 07_normalization_rivers.py "$CONFIG_FILE"
 
-# # Switch back to Rasterio environment
+# # Process subsidence
+# # Activate Rasterio environment
 # conda deactivate
 # conda activate mrpm_env
 
-# # Run the Python script
-# python 19_clip_subsidence.py
+# python 08_clip_subsidence.py "$CONFIG_FILE"
 
-# # Switch back to QGIS environment
+# # Activate QGIS environment
 # conda deactivate
 # conda activate qgis_env
 
-# # Run the Python script
-# python 20_process_subsidence.py
+# python 08_process_subsidence.py "$CONFIG_FILE"
 
-# # Switch back to Rasterio environment
+# # Process landcover
+# # Activate Rasterio environment
 # conda deactivate
 # conda activate mrpm_env
 
-# # Run the Python script
-# python 21_process_landcover.py
+# python 09_process_landcover.py "$CONFIG_FILE"
 
-# # Switch back to QGIS environment
+# # Process permanent water
+# # Activate QGIS environment
 # conda deactivate
 # conda activate qgis_env
 
-# python 22_process_permanent_water.py
-# python 23_process_empty_areas.py
-# python 24_process_no_valid_areas.py
-# python 25_process_mangrove_potential_areas.py
+# python 10_process_permanent_water.py "$CONFIG_FILE"
 
-# Switch back to Rasterio environment
-conda deactivate
-conda activate mrpm_env
+# # Process empty areas and no valid areas
+# python 11_process_empty_areas.py "$CONFIG_FILE"
+# python 11_process_no_valid_areas.py "$CONFIG_FILE"
 
-python 26_calculate_statistics.py
-python 27_create_visualization.py
-# python 29_process_cog_files.py
+# # Process mangrove potential areas
+# python 12_process_mangrove_potential_areas.py "$CONFIG_FILE"
+
+# # Post-processing
+# # Activate Rasterio environment
+# conda deactivate
+# conda activate mrpm_env
+
+# python 13_calculate_statistics.py "$CONFIG_FILE"
+# python 14_create_visualization.py "$CONFIG_FILE"
+# python 15_process_cog_files.py "$CONFIG_FILE"

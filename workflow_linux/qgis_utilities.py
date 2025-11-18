@@ -97,6 +97,7 @@ def reproject_raster(input_raster, output_raster, resolution, extent):
         'EXTRA': '',
         'OUTPUT': output_raster
     })
+    print("saved to", output_raster)
 
 def raster_calculator(expression, input_rasters, output_raster):
     print(f"📐 Raster calculator expression:\n{expression}")
