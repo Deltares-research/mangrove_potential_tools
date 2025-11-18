@@ -1,6 +1,6 @@
-# Mangrove Restoration Potential Map (MRPM) Tools
+# Mangrove Potential Map (MRPM) Tools
 
-This repository contains QGIS tools for processing the mangrove restoration potential map from Deltares. The workflow processes various geospatial datasets to create mangrove potential maps and underlying layers that assess the suitability of areas for mangrove restoration.
+This repository contains QGIS tools for processing the mangrove potential map from Deltares. The workflow processes various geospatial datasets to create mangrove potential maps and underlying layers that assess the suitability of areas for mangrove restoration.
 
 ## Objectives
 
@@ -135,7 +135,7 @@ Combines intertidal space categories into a normalized accommodation space score
 - Higher scores indicate better accommodation space for mangroves
 - Outputs normalized accommodation space rasters (`ACC_{tile_id}.tif`)
 
-### Step 05: Process GMW Data
+### Step 05: Process GMW Historical and Recruitment
 
 #### `05_process_gmw.py`
 Processes Global Mangrove Watch (GMW) data for multiple years. The script:
@@ -252,7 +252,7 @@ Creates a comprehensive exclusion mask combining multiple exclusion criteria. Th
 ### Step 12: Process Mangrove Potential Areas
 
 #### `12_process_mangrove_potential_areas.py`
-Calculates the final mangrove restoration potential score. The script:
+Calculates the final mangrove potential score. The script:
 - Combines all normalized factor layers with configurable weights:
   - **PON**: Pond classification (negative factor)
   - **ACC**: Accommodation space
