@@ -5,7 +5,7 @@ This repository contains geospatial tools for processing the mangrove potential 
 ## Objectives
 
 The tools in this repository are designed to:
-- Create mangrove potential maps that identify areas suitable for mangrove restoration
+- Create mangrove potential maps that identify areas suitable for mangrove growth
 - Generate underlying layers that contribute to the potential assessment, including:
   - Pond classification (aquaculture areas)
   - Elevation and accommodation space
