@@ -316,15 +316,119 @@ The workflow generates outputs organized in numbered directories:
 
 ## Configuration
 
-The `config.json` file contains all parameters, paths, and settings. Key configuration sections include:
+The `config.json` file contains all parameters, paths, and settings needed for the workflow. Below is a detailed description of each parameter organized by category:
 
-- **Paths**: Data directories, input files, output locations
-- **Tiles**: Tile IDs to process, tiles to add/skip
-- **Parameters**: Resolution, multipliers, thresholds, weights
-- **Years**: GMW years to process, Clark data year
-- **Environments**: QGIS environment path
+### Paths and Directories
 
-Refer to the example `config.json` in the `workflow_linux/` directory for detailed parameter descriptions.
+- **`analysis_id`**: Unique identifier for the analysis run (e.g., "S01E117"). Used to organize output directories and log files.
+
+- **`data_dir`**: Base directory where all workflow outputs are stored. All numbered output directories (1_Tiles, 2_Clark_classification, etc.) are created within this directory.
+
+- **`time_logfile`**: Directory path where processing time logs are saved. The workflow logs execution time for each step.
+
+- **`clark_files`**: Directory containing Clark aquaculture classification ZIP files. The script scans this directory to find matching files based on year and version.
+
+- **`clark_vrt`**: Path to the output VRT file created from Clark data. This virtual raster table references all matching Clark TIFF files without extracting them from ZIP archives.
+
+- **`deltadtm_files`**: Directory containing DeltaDTM elevation data ZIP files.
+
+- **`deltadtm_vrt`**: Path to the output VRT file created from DeltaDTM elevation data.
+
+- **`gmw_files`**: Directory containing Global Mangrove Watch (GMW) data ZIP files organized by year.
+
+- **`gmw_vrt`**: Directory where GMW VRT files are created (one per year).
+
+- **`global_tiles`**: Path to the global tile grid shapefile used for tile identification and geometry.
+
+- **`gmw_tiles`**: Path to the GMW tile boundaries GeoJSON file, used to filter tiles within GMW latitude range.
+
+- **`clark_tiles`**: Directory containing Clark tile geometries used for matching with global tiles.
+
+- **`countries_geometries`**: Path to the countries GeoJSON file used to add country information to tiles.
+
+- **`gtsm_points`**: Path to the Global Tide and Surge Model (GTSM) point data GeoPackage containing tidal indicator values.
+
+- **`rivers_geometries`**: Path to the rivers GeoJSON file used for proximity analysis.
+
+- **`coastline_geometries`**: Path to the coastline shapefile used for proximity analysis.
+
+- **`subsidence_data_2010`**: Path to the 2010 subsidence projection raster (Garcia et al. 2021).
+
+- **`subsidence_data_2040`**: Path to the 2040 subsidence projection raster.
+
+- **`permanent_water_vrt`**: Path to the VRT file for Global Surface Water Occurrence (GSWO) data, used to identify permanent water bodies.
+
+- **`geoserver_folder`**: Output directory for Cloud-Optimized GeoTIFF (COG) files organized for GeoServer or similar web mapping services.
+
+### Tiles Configuration
+
+- **`tiles_ids`**: Array of tile IDs to process (e.g., ["S01E117"]). These are the primary tiles for the analysis.
+
+- **`tiles_to_add`**: Array of additional tile IDs to include in processing. These tiles are added to the filtered Clark tiles.
+
+- **`tiles_to_skip`**: Array of tile IDs to exclude from processing, even if they match other criteria.
+
+### Processing Parameters
+
+- **`qgis_env_path`**: Full path to the QGIS conda environment. Required for steps that use QGIS processing tools.
+
+- **`target_res_deg`**: Target resolution in degrees for output rasters (approximately 25 meters). Used for reprojecting and resampling all output rasters.
+
+- **`target_res_deg_for_seed_dispersal`**: Coarser resolution in degrees (approximately 100 meters) used for mangrove proximity analysis to reduce computational load.
+
+- **`clark_countries`**: Array of country names where Clark aquaculture data is available. Used to filter relevant tiles.
+
+- **`clark_year`**: Year of Clark data to process (e.g., "2022"). Used to filter matching ZIP files.
+
+- **`clark_multipliers`**: Dictionary mapping Clark classification codes to normalization multipliers (0-100). Used to convert classification codes into normalized scores. For example, `{"1": 0, "2": 0, "3": 100, "4": 0, "5": 0}` assigns a score of 1.0 to class 3 (ponds) and 0.0 to all other classes.
+
+- **`deltadtm_mangrove_correction`**: Elevation correction in centimeters (typically 48) to account for mangrove canopy height. This value is subtracted from elevation values to estimate ground elevation beneath mangrove canopies.
+
+- **`intertidal_slr_correction`**: Sea-level rise correction in centimeters (typically 100) added to Highest Astronomical Tide (HAT) to define the upper boundary of intertidal space suitable for mangroves.
+
+- **`accommodation_multipliers`**: Dictionary mapping accommodation space categories to normalization multipliers. Key "1" corresponds to MSL (Mean Sea Level) category, key "2" corresponds to BEY (beyond HAT) category. Used to weight different accommodation space types when combining them.
+
+- **`proximity_distances`**: Array of distances in meters for proximity analysis (e.g., [500, 2500, 10000]). Used for both mangrove proximity (seed dispersal) and coastline/river proximity calculations.
+
+- **`proximity_gmw_multipliers`**: Dictionary mapping proximity distance indices (1, 2, 3) to normalization multipliers. Index 1 = closest distance, index 3 = farthest distance. Higher multipliers for closer distances indicate better seed availability.
+
+- **`proximity_coastline_multipliers`**: Dictionary mapping coastline proximity distance indices (1-4) to normalization multipliers. Four distances are used: 500m, 2500m, 5000m, 7500m. Closer to coastline = higher score.
+
+- **`proximity_rivers_multipliers`**: Dictionary mapping river proximity distance indices (1-3) to normalization multipliers. Three distances are used: 250m, 500m, 2500m. Closer to rivers = higher score.
+
+- **`subsidence_multipliers_2010`**: Dictionary mapping subsidence class indices (1-6) to normalization multipliers for 2010 projections. Class 1 = lowest subsidence (best), class 6 = highest subsidence (worst). Lower subsidence = higher potential score.
+
+- **`subsidence_multipliers_2040`**: Dictionary mapping subsidence class indices (1-6) to normalization multipliers for 2040 projections. Same structure as `subsidence_multipliers_2010`.
+
+- **`esa_worldcover_urban_class`**: ESA WorldCover land cover class code for urban areas (typically 50). Used to identify and exclude urban areas from potential assessment.
+
+- **`permanent_water_threshold`**: Percentage threshold (0-100) for permanent water identification. Areas with water occurrence above this threshold are classified as permanent water and excluded. Typically set to 90.
+
+- **`weights`**: Dictionary defining weights for each factor in the final mangrove potential calculation:
+  - **`PON`**: Weight for pond classification (negative factor - higher pond presence reduces potential)
+  - **`ACC`**: Weight for accommodation space
+  - **`HIS`**: Weight for historical mangrove presence
+  - **`PRM`**: Weight for proximity to mangroves (seed availability)
+  - **`PRC_PRR`**: Weight for maximum of coastline and river proximity
+  - **`SUB`**: Weight for subsidence (negative factor - higher subsidence reduces potential)
+  
+  All weights are typically set to 100, making them equal. The final score is calculated as: `(PON×w1 + ACC×w2 + HIS×w3 + PRM×w4 + max(PRC,PRR)×w5 + SUB×w6) / sum(weights)`
+
+### Years Configuration
+
+- **`gmw_years`**: Array of years for which GMW data should be processed (e.g., [1996, 2007, 2008, 2009, 2010, 2015, 2016, 2017, 2018, 2019, 2020]). Used to create VRT files and process annual mangrove presence rasters.
+
+- **`historical_gmw_years`**: Array of years used for historical mangrove presence analysis. Typically the same as `gmw_years`. Areas that were mangroves in more recent years receive higher scores.
+
+- **`recruitment_gmw_years`**: Array of years used for recruitment analysis, typically in reverse chronological order. Areas where mangroves appeared earlier in the time series receive higher scores, indicating better recruitment potential.
+
+- **`historical_gmw_multipliers`**: Dictionary mapping years to normalization multipliers for historical presence scoring. More recent years receive higher multipliers (e.g., 2020 = 100, 1996 = 0), reflecting that recent historical presence is more relevant for potential assessment.
+
+- **`recruitment_gmw_multipliers`**: Dictionary mapping years to normalization multipliers for recruitment scoring. Same structure as `historical_gmw_multipliers`, but used to identify areas where mangroves first appeared (recruitment potential).
+
+- **`gmw_last_year`**: The most recent year of GMW data available (typically 2020). Used as the reference year for various analyses and as the base for proximity calculations.
+
+Refer to the example `config.json` in the `workflow_linux/` directory for a complete configuration template.
 
 ## Notes
 
