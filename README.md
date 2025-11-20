@@ -99,7 +99,6 @@ Prepares the tile structure for processing. The script:
 #### `03_process_clark.py`
 Processes Clark aquaculture classification data to identify pond areas. The script:
 - Clips and reprojects Clark VRT data to each tile's extent and target resolution
-- Applies classification multipliers to normalize pond classifications (classes 1-5) to values 0-1
 - Creates binary and filled rasters identifying pond areas
 - Outputs normalized pond classification rasters (`PON_{tile_id}.tif`) used as a factor in potential assessment
 
