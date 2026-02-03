@@ -8,7 +8,7 @@ The tools in this repository are designed to:
 - Create mangrove potential maps that identify areas suitable for mangrove growth
 - Generate underlying layers that contribute to the potential assessment, including:
   - Pond classification (aquaculture areas)
-  - Accommodation space based on elevation and highest astronocimal tides
+  - Accommodation space based on elevation and highest astronomical tides
   - Historical and recruitment mangrove presence
   - Proximity to existing mangroves, coastlines, and rivers
   - Subsidence rates
