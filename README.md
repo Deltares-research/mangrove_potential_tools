@@ -87,7 +87,7 @@ Creates VRT files for Global Mangrove Watch (GMW) data for multiple years. The s
 ### Step 02: Processing Tiles
 
 #### `02_processing_tiles.py`
-Prepares the tile structure for processing. The script:
+Select the tiles (1 x 1 degree) relevant for processing. The script:
 - Filters Clark tiles to obtain tiles within GMW latitude range
 - Matches tiles with SRTM IDs and overlapping countries
 - Creates tile geometries with 0m, 10km, and 200km buffers for different analysis purposes
